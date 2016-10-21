@@ -21,7 +21,9 @@ export let createActions = typesList => {
   let types = Object.keys(typesList).map(key => typesList[key])
   return types.reduce(
     (obj, { originalType, prefixedType }) => {
-      obj[originalType] = getActionCreator(prefixedType)
+      let action = getActionCreator(prefixedType)
+      action.type = prefixedType
+      obj[originalType] = action
       return obj
     },
     {}

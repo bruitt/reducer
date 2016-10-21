@@ -93,6 +93,9 @@ test('generate actions from prefixed types', (t) => {
     payload: 1
   }, pullAction, 'successful pull')
 
+  t.equal('@todo/PUSH', pushAction.type, 'push type is valid')
+  t.equal('@todo/PULL', pullAction.type, 'pull type is valid')
+
   t.end()
 })
 
