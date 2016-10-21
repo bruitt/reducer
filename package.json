@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "license": "MIT",
   "author": "Andrey Mayorov <frandsaw@gmail.com>",
+  "files": ["dist"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bruitt/reducer.git"
