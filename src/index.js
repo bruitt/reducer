@@ -1,36 +1,32 @@
-import R from 'ramda'
-
-export let camelToConst = R.pipe(
-  R.replace(/(?!^)([A-Z])/g, '_$1'),
-  R.toUpper
-)
-
+export let camelToConst = str => str.replace(/(?!^)([A-Z])/g, '_$1').toUpperCase()
 export let prefixType = (prefix, type) => `${prefix}/${camelToConst(type)}`
 
 export let getPrefixedTypes = (prefix, handlers) => {
-  let types = R.keys(handlers)
-  return R.reduce(
+  let types = Object.keys(handlers)
+  return types.reduce(
     (obj, type) => {
       let prefixedType = prefixType(prefix, type)
-      return R.assoc(prefixedType, {
+      obj[prefixedType] = {
         originalType: type,
         prefixedType
-      }, obj)
+      }
+      return obj
     },
-    {},
-    types
+    {}
   )
 }
 
 export let getActionCreator = type => payload => ({ type, payload })
-export let createActions = R.pipe(
-  R.values,
-  R.reduce(
-    (obj, { originalType, prefixedType }) =>
-      R.assoc(originalType, getActionCreator(prefixedType), obj),
+export let createActions = typesList => {
+  let types = Object.keys(typesList).map(key => typesList[key])
+  return types.reduce(
+    (obj, { originalType, prefixedType }) => {
+      obj[originalType] = getActionCreator(prefixedType)
+      return obj
+    },
     {}
   )
-)
+}
 
 export let createReducer = (handlers, prefix, initialState = {}) => {
   let prefixedTypes = getPrefixedTypes(prefix, handlers)
