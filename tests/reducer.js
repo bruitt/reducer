@@ -1,5 +1,5 @@
 import test from 'tape'
-import createReducer, * as utils from '../src/index'
+import createReducer, * as utils from '../src/reducer'
 
 let identity = (value) => value
 
