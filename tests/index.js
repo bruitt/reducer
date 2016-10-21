@@ -95,3 +95,21 @@ test('generate actions from prefixed types', (t) => {
 
   t.end()
 })
+
+
+test('create reducer', (t) => {
+  let { createReducer } = utils
+  let reducer = createReducer({
+    add: payload => state => state + payload,
+    multiply: payload => state => state * payload
+  }, '@calc', 0)
+
+  let state = null
+  state = reducer(state, reducer.add(5))
+  t.equals(5, state, 'add action -> 5')
+
+  state = reducer(state, reducer.multiply(2))
+  t.equals(10, state, 'multiply action -> 10')
+
+  t.end()
+})
