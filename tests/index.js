@@ -50,3 +50,48 @@ test('transform types to prefixed types', (t) => {
   t.deepEqual(expectedResult, result)
   t.end()
 })
+
+
+test('returns action', (t) => {
+  let { getActionCreator } = utils
+  let addTodo = getActionCreator('@todo/ADD_TODO')
+  let payload = {
+    id: 0,
+    text: 'test'
+  }
+
+  let action = addTodo(payload)
+  let expectedAction = {
+    type: '@todo/ADD_TODO',
+    payload
+  }
+
+  t.deepEqual(expectedAction, action)
+  t.end()
+})
+
+
+test('generate actions from prefixed types', (t) => {
+  let { createActions, getPrefixedTypes } = utils
+  let handlers = {
+    push: identity,
+    pull: identity
+  }
+  let prefixedTypes = getPrefixedTypes('@todo', handlers)
+  let actions = createActions(prefixedTypes)
+
+  let pushAction = actions.push(1)
+  let pullAction = actions.pull(1)
+
+  t.deepEqual({
+    type: '@todo/PUSH',
+    payload: 1
+  }, pushAction, 'successful push')
+
+  t.deepEqual({
+    type: '@todo/PULL',
+    payload: 1
+  }, pullAction, 'successful pull')
+
+  t.end()
+})
