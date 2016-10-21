@@ -16,3 +16,10 @@ test('transform camel case to standard flux type const', (t) => {
 
   t.end()
 })
+
+
+test('prefix type', (t) => {
+  let { prefixType } = utils
+  t.equal('@test/TEST_ACTION', prefixType('@test', 'testAction'), 'testAction -> @test/TEST_ACTION')
+  t.end()
+})
