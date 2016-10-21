@@ -5,7 +5,8 @@ test('transform camel case to standard flux type const', (t) => {
   let { camelToConst } = utils
   let cases = {
     check: 'CHECK',
-    checkCamelCase: 'CHECK_CAMEL_CASE'
+    checkCamelCase: 'CHECK_CAMEL_CASE',
+    CheckCapitalizedString: 'CHECK_CAPITALIZED_STRING'
   }
 
   Object.keys(cases).forEach((key) => {

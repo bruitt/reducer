@@ -1,7 +1,7 @@
 import R from 'ramda'
 
 export let camelToConst = R.pipe(
-  R.replace(/([A-Z])/g, '_$1'),
+  R.replace(/(?!^)([A-Z])/g, '_$1'),
   R.toUpper
 )
 
