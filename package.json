@@ -1,8 +1,17 @@
 {
-  "name": "create-reducer",
+  "name": "@bruitt/reducer",
   "version": "1.0.0",
   "main": "dist/index.js",
   "license": "MIT",
+  "author": "Andrey Mayorov <frandsaw@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bruitt/reducer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bruitt/reducer/issues"
+  },
+  "homepage": "https://github.com/bruitt/reducer#readme",
   "scripts": {
     "build": "babel src -d dist",
     "test": "tape -r babel-register tests/**/*.js"
