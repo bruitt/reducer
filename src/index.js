@@ -1,13 +1,13 @@
 import R from 'ramda'
 
-let camelToConst = R.pipe(
+export let camelToConst = R.pipe(
   R.replace(/([A-Z])/g, '_$1'),
   R.toUpper
 )
 
-let prefixType = (prefix, type) => `${prefix}/${camelToConst(type)}`
+export let prefixType = (prefix, type) => `${prefix}/${camelToConst(type)}`
 
-let getPrefixedTypes = (prefix, handlers) => {
+export let getPrefixedTypes = (prefix, handlers) => {
   let types = R.keys(handlers)
   return R.reduce(
     (obj, type) => {
@@ -22,8 +22,8 @@ let getPrefixedTypes = (prefix, handlers) => {
   )
 }
 
-let getActionCreator = type => payload => ({ type, payload })
-let createActions = R.pipe(
+export let getActionCreator = type => payload => ({ type, payload })
+export let createActions = R.pipe(
   R.values,
   R.reduce(
     (obj, { originalType, prefixedType }) =>
@@ -32,7 +32,7 @@ let createActions = R.pipe(
   )
 )
 
-let createReducer = (handlers, prefix, initialState = {}) => {
+export let createReducer = (handlers, prefix, initialState = {}) => {
   let prefixedTypes = getPrefixedTypes(prefix, handlers)
   let actions = createActions(prefixedTypes)
 
@@ -49,3 +49,5 @@ let createReducer = (handlers, prefix, initialState = {}) => {
 
   return Object.assign(reducer, actions)
 }
+
+export default createReducer
