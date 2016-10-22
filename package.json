@@ -1,6 +1,6 @@
 {
   "name": "@bruitt/reducer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "license": "MIT",
   "author": "Andrey Mayorov <frandsaw@gmail.com>",
@@ -15,7 +15,8 @@
   "homepage": "https://github.com/bruitt/reducer#readme",
   "scripts": {
     "build": "babel src -d dist",
-    "test": "tape -r babel-register tests/**/*.js"
+    "test": "tape -r babel-register tests/**/*.js",
+    "prepublish": "npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
