@@ -22,14 +22,27 @@ export let createActions = (handlers) => {
   )
 }
 
+let isFunction = obj => Object.prototype.toString.call(obj) === '[object Function]'
+let isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
+
 export let createReducer = (handlers, prefix, initialState = {}) => {
   let typesMap = getTypesMap(prefix, handlers)
 
-  let reducer = (state = initialState, dispatchedAction) => {
-    let { name } = typesMap[dispatchedAction.type] || {}
+  let reducer = (state = initialState, { type, payload, meta }) => {
+    let { name } = typesMap[type] || {}
     let handler = handlers[name]
-    if (handler) {
-      return handler(dispatchedAction.payload, dispatchedAction.meta)(state)
+
+    if (isFunction(handler)) {
+      return handler(payload, meta)(state)
+    }
+
+    if (isObject(handler)) {
+      let metaKey = meta || 'nil'
+      handler = handler[metaKey]
+
+      if (isFunction(handler)) {
+        return handler(payload, meta)(state)
+      }
     }
 
     return state

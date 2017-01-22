@@ -19,6 +19,13 @@ let putError = R.assoc('error')
 
 export default createReducer({
   takeData: null,
+  takeEffect: {
+    nil: doStuff,
+    start: ...,
+    success: ...,
+    failure: ...,
+    finish: ...
+  },
   putData,
   putLoading,
   putError
