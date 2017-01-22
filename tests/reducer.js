@@ -3,47 +3,23 @@ import createReducer, * as utils from '../src/reducer'
 
 let identity = (value) => value
 
-test('transform camel case to standard flux type const', (t) => {
-  let { camelToConst } = utils
-  let cases = {
-    check: 'CHECK',
-    checkCamelCase: 'CHECK_CAMEL_CASE',
-    CheckCapitalizedString: 'CHECK_CAPITALIZED_STRING'
-  }
-
-  Object.keys(cases).forEach((key) => {
-    let value = cases[key]
-    t.equal(value, camelToConst(key), `${key} -> ${value}`)
-  })
-
-  t.end()
-})
-
-
-test('prefix type', (t) => {
-  let { prefixType } = utils
-  t.equal('@test/TEST_ACTION', prefixType('@test', 'testAction'), 'testAction -> @test/TEST_ACTION')
-  t.end()
-})
-
-
-test('transform types to prefixed types', (t) => {
-  let { getPrefixedTypes } = utils
+test('transform names to types', (t) => {
+  let { getTypesMap } = utils
   let handlers = {
     addTodo: identity,
     removeTodo: identity
   }
 
-  let result = getPrefixedTypes('@todo', handlers)
+  let result = getTypesMap('@todo', handlers)
   let expectedResult = {
-    '@todo/ADD_TODO': {
-      originalType: 'addTodo',
-      prefixedType: '@todo/ADD_TODO'
+    '@todo/addTodo': {
+      name: 'addTodo',
+      type: '@todo/addTodo'
     },
 
-    '@todo/REMOVE_TODO': {
-      originalType: 'removeTodo',
-      prefixedType: '@todo/REMOVE_TODO'
+    '@todo/removeTodo': {
+      name: 'removeTodo',
+      type: '@todo/removeTodo'
     }
   }
 
@@ -54,7 +30,7 @@ test('transform types to prefixed types', (t) => {
 
 test('returns action', (t) => {
   let { getActionCreator } = utils
-  let addTodo = getActionCreator('@todo/ADD_TODO')
+  let addTodo = getActionCreator('@todo/addTodo')
   let payload = {
     id: 0,
     text: 'test'
@@ -62,7 +38,8 @@ test('returns action', (t) => {
 
   let action = addTodo(payload)
   let expectedAction = {
-    type: '@todo/ADD_TODO',
+    type: '@todo/addTodo',
+    meta: undefined,
     payload
   }
 
@@ -71,30 +48,32 @@ test('returns action', (t) => {
 })
 
 
-test('generate actions from prefixed types', (t) => {
-  let { createActions, getPrefixedTypes } = utils
+test('generate actions from types', (t) => {
+  let { createActions, getTypesMap } = utils
   let handlers = {
     push: identity,
     pull: identity
   }
-  let prefixedTypes = getPrefixedTypes('@todo', handlers)
-  let actions = createActions(prefixedTypes)
+  let typesMap = getTypesMap('@todo', handlers)
+  let actions = createActions('@todo', handlers)
 
   let pushAction = actions.push(1)
   let pullAction = actions.pull(1)
 
   t.deepEqual({
-    type: '@todo/PUSH',
+    type: '@todo/push',
+    meta: undefined,
     payload: 1
   }, pushAction, 'successful push')
 
   t.deepEqual({
-    type: '@todo/PULL',
+    type: '@todo/pull',
+    meta: undefined,
     payload: 1
   }, pullAction, 'successful pull')
 
-  t.equal('@todo/PUSH', pushAction.type, 'push type is valid')
-  t.equal('@todo/PULL', pullAction.type, 'pull type is valid')
+  t.equal('@todo/push', pushAction.type, 'push type is valid')
+  t.equal('@todo/pull', pullAction.type, 'pull type is valid')
 
   t.end()
 })

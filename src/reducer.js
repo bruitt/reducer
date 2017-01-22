@@ -1,7 +1,7 @@
 export let getTypesMap = (prefix, handlers) => {
   return Object.keys(handlers).reduce(
     (obj, name) => {
-      let type = `${prefix}/${type}`
+      let type = `${prefix}/${name}`
       obj[type] = { name, type }
       return obj
     },
@@ -11,7 +11,7 @@ export let getTypesMap = (prefix, handlers) => {
 
 export let getActionCreator = (type) => (payload, meta) => ({ type, payload, meta })
 
-export let createActions = (handlers) => {
+export let createActions = (prefix, handlers) => {
   return Object.keys(handlers).reduce(
     (obj, name) => {
       let type = `${prefix}/${name}`
@@ -48,7 +48,7 @@ export let createReducer = (handlers, prefix, initialState = {}) => {
     return state
   }
 
-  return Object.assign(reducer, createActions(handlers))
+  return Object.assign(reducer, createActions(prefix, handlers))
 }
 
 export default createReducer
