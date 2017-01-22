@@ -28,20 +28,18 @@ let isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
 export let createReducer = (handlers, prefix, initialState = {}) => {
   let typesMap = getTypesMap(prefix, handlers)
 
-  let reducer = (state = initialState, { type, payload, meta }) => {
+  let reducer = (state = initialState, { type, payload, meta = 'default' }) => {
     let { name } = typesMap[type] || {}
     let handler = handlers[name]
 
     if (isFunction(handler)) {
-      // return handler(payload, meta)(state)
       return handler(payload)(state)
     }
 
     if (isObject(handler)) {
-      handler = handler[meta || 'cmd']
+      handler = handler[meta]
 
       if (isFunction(handler)) {
-        // return handler(payload, meta)(state)
         return handler(payload)(state)
       }
     }
