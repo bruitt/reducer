@@ -33,15 +33,16 @@ export let createReducer = (handlers, prefix, initialState = {}) => {
     let handler = handlers[name]
 
     if (isFunction(handler)) {
-      return handler(payload, meta)(state)
+      // return handler(payload, meta)(state)
+      return handler(payload)(state)
     }
 
     if (isObject(handler)) {
-      let metaKey = meta || 'nil'
-      handler = handler[metaKey]
+      handler = handler[meta || 'cmd']
 
       if (isFunction(handler)) {
-        return handler(payload, meta)(state)
+        // return handler(payload, meta)(state)
+        return handler(payload)(state)
       }
     }
 
