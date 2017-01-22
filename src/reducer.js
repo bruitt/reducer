@@ -1,29 +1,21 @@
-export let camelToConst = str => str.replace(/(?!^)([A-Z])/g, '_$1').toUpperCase()
-export let prefixType = (prefix, type) => `${prefix}/${camelToConst(type)}`
-
-export let getPrefixedTypes = (prefix, handlers) => {
-  let types = Object.keys(handlers)
-  return types.reduce(
-    (obj, type) => {
-      let prefixedType = prefixType(prefix, type)
-      obj[prefixedType] = {
-        originalType: type,
-        prefixedType
-      }
+export let getTypesMap = (prefix, handlers) => {
+  return Object.keys(handlers).reduce(
+    (obj, name) => {
+      let type = `${prefix}/${type}`
+      obj[type] = { name, type }
       return obj
     },
     {}
   )
 }
 
-export let getActionCreator = type => payload => ({ type, payload })
-export let createActions = typesList => {
-  let types = Object.keys(typesList).map(key => typesList[key])
-  return types.reduce(
-    (obj, { originalType, prefixedType }) => {
-      let action = getActionCreator(prefixedType)
-      action.type = prefixedType
-      obj[originalType] = action
+export let getActionCreator = (type) => (payload, meta) => ({ type, payload, meta })
+
+export let createActions = (handlers) => {
+  return Object.keys(handlers).reduce(
+    (obj, name) => {
+      let type = `${prefix}/${name}`
+      obj[name] = Object.assign(getActionCreator(type), { type })
       return obj
     },
     {}
@@ -31,21 +23,19 @@ export let createActions = typesList => {
 }
 
 export let createReducer = (handlers, prefix, initialState = {}) => {
-  let prefixedTypes = getPrefixedTypes(prefix, handlers)
-  let actions = createActions(prefixedTypes)
+  let typesMap = getTypesMap(prefix, handlers)
 
   let reducer = (state = initialState, dispatchedAction) => {
-    let { originalType } = prefixedTypes[dispatchedAction.type] || {}
-    let handler = handlers[originalType]
-
+    let { name } = typesMap[dispatchedAction.type] || {}
+    let handler = handlers[name]
     if (handler) {
-      return handler(dispatchedAction.payload)(state)
+      return handler(dispatchedAction.payload, dispatchedAction.meta)(state)
     }
 
     return state
   }
 
-  return Object.assign(reducer, actions)
+  return Object.assign(reducer, createActions(handlers))
 }
 
 export default createReducer
